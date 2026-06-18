@@ -1,0 +1,39 @@
+services:
+  dashboard:
+    image: nginxdemos/hello:latest
+    container_name: msp-dashboard
+    ports:
+      - "${DASHBOARD_PORT:-3000}:80"
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: msp-api
+    ports:
+      - "${API_PORT:-42000}:42000"
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      SECRET_KEY: ${SECRET_KEY:-change-me}
+    volumes:
+      - ./api:/app
+    restart: unless-stopped
+    depends_on:
+      - timescaledb
+
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    container_name: msp-timescaledb
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-msp}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+      POSTGRES_DB: ${POSTGRES_DB:-msp}
+    ports:
+      - "5433:5432"
+    volumes:
+      - tsdb:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  tsdb:

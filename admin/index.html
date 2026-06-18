@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>MSP Admin Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#0b1220; color:#e6e8eb; margin:0; padding: 24px; }
+    h1 { margin-top:0; }
+    table { width:100%; border-collapse: collapse; }
+    th, td { text-align:left; padding:10px 8px; border-bottom:1px solid #1f2c3b; }
+    th { color:#8aa3bf; }
+    .muted { color:#8aa3bf; }
+  </style>
+</head>
+<body>
+  <h1>MSP Admin Dashboard</h1>
+  <p class="muted">Private admin view: recent staff login activity across tracked services.</p>
+  <table>
+    <thead>
+      <tr><th>Time</th><th>Staff</th><th>Service</th><th>Event</th><th>Source IP</th></tr>
+    </thead>
+    <tbody id="rows">
+      <tr><td colspan="5" class="muted">Loading...</td></tr>
+    </tbody>
+  </table>
+  <script>
+    async function load() {
+      const api = "http://localhost:42000/admin/events?limit=100";
+      const res = await fetch(api);
+      const data = await res.json();
+      const tbody = document.getElementById("rows");
+      tbody.innerHTML = "";
+      for (const row of data) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${row.created_at||""}</td><td>${row.staff_id||"-"}</td><td>${row.service||""}</td><td>${row.event_type||""}</td><td>${row.source_ip||"-"}</td>`;
+        tbody.appendChild(tr);
+      }
+      if (!data.length) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td colspan="5" class="muted">No events yet</td>`;
+        tbody.appendChild(tr);
+      }
+    }
+    load();
+  </script>
+</body>
+</html>
