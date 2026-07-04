@@ -1,9 +1,18 @@
-from fastapi import FastAPI, Depends, HTTPException, Request
-from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, ForeignKey
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, Session, relationship
 import os
 from datetime import datetime
+
+from fastapi import Depends, FastAPI
+from sqlalchemy import (
+    Column,
+    DateTime,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
+    create_engine,
+)
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import Session, sessionmaker
 
 DATABASE_URL=os.getenv("DATABASE_URL", "sqlite:///./local.db")
 connect_args={"check_same_thread": False} if str(DATABASE_URL).startswith("sqlite") else {}
@@ -86,6 +95,6 @@ def list_events(service: str | None=None, limit: int=50, db: Session=Depends(get
           "source_ip":r.source_ip,
           "user_agent":r.user_agent,
           "metadata":r.metadata_json,
-          "created_at":r.created_at.isoformat() if r.created_at else None
+          "created_at":r.created_at.isoformat() if r.created_at else None,
         })
     return out
