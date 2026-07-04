@@ -1,165 +1,87 @@
-# MSP Admin Dashboard — IT Operations Visibility
+# MSP Admin Dashboard
 
-**Version:** v1.0  
-**Status:** Active Development  
-**Repository:** https://github.com/OneByJorah/msp-dashboard
+**Local-only IT operations visibility with auth event tracking, service health, staff inventory, and adapter integrations.**
 
----
+![License](https://img.shields.io/badge/License-MIT-FFB300.svg?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Active_Development-FFB300.svg?style=for-the-badge)
+![Language](https://img.shields.io/badge/Language-Python-FFB300.svg?style=for-the-badge)
+![Stack](https://img.shields.io/badge/Stack-Docker_FastAPI_TimescaleDB-FFB300.svg?style=for-the-badge)
+![Platform](https://img.shields.io/badge/Platform-Linux-FFB300.svg?style=for-the-badge)
 
-## Table of Contents
+MSP Admin Dashboard provides local-only IT operations visibility through a Nginx-served HTML UI backed by FastAPI and TimescaleDB. It aggregates auth events, service health, staff records, and adapter integrations for email, osTicket, and password resets. Designed for MSP and internal IT teams who require self-hosted control planes without SaaS dependencies.
 
-- [Overview](#overview)
-- [Architecture](#architecture)
-- [Technology Stack](#technology-stack)
-- [Features](#features)
-- [Getting Started](#getting-started)
-- [Environment Variables](#environment-variables)
-- [Service Management](#service-management)
-- [Project Structure](#project-structure)
-- [Screenshots](#screenshots)
-- [Contributing](#contributing)
-- [License](#license)
-- [Author](#author)
+- Single `docker compose up -d` deployment.
+- Time-series auth event storage via TimescaleDB.
+- Adapter-driven extensibility for email, ticketing, and identity flows.
+- Local-only access with no outbound SaaS dependencies.
+- Static frontend served through Nginx for minimal attack surface.
 
----
-
-## Overview
-
-MSP Admin Dashboard is a local-only admin dashboard for IT operations visibility. It aggregates auth events, service health, staff records, and adapter integrations (email, osTicket, password reset) into a single control plane backed by TimescaleDB.
-
-Designed for MSP and internal IT teams who want self-hosted visibility without SaaS dependencies.
-
----
-
-## Architecture
-
-Client browser → Nginx (`nginxdemos/hello` image, port `3000`) → FastAPI backend (`api/app.py`, port `42000`) → TimescaleDB (`5433:5432`) → adapters (email, osTicket, password reset).
-
-Data model:
-- `admin_users`, `services`, `staff`, `auth_events`
-
----
-
-## Technology Stack
-
-| Layer | Stack |
-|---|---|
-| Runtime | Docker Compose |
-| Frontend | Static HTML (Nginx hello image + `admin/index.html`) |
-| Backend | Python / FastAPI / Uvicorn |
-| Database | TimescaleDB / PostgreSQL 16 |
-| ORM | SQLAlchemy |
-| VCS | Git + GitHub (`github.com/OneByJorah/msp-dashboard`) |
-
----
-
-## Features
-
-- **Admin UI**: local-only dashboard at `http://localhost:3000`.
-- **Auth event tracking**: login, MFA, and service access logs.
-- **Staff + service inventory**: structured staff and service records.
-- **Adapter integrations**:
-  - Email adapter (`adapters/email/adapter.py`)
-  - osTicket adapter (`adapters/osticket/adapter.py`)
-  - Password reset adapter (`adapters/password-reset/adapter.py`)
-- **Time-series ready**: TimescaleDB storage for events and metrics.
-
----
-
-## Getting Started
-
-```bash
-# 1. Clone
-git clone https://github.com/OneByJorah/msp-dashboard.git
-cd msp-dashboard
-
-# 2. Environment
-cp compose.env.example .env
-
-# 3. Deploy
-make deploy
-# or
-docker compose up -d
-
-# 4. Open admin UI
-open http://localhost:3000
-```
-
----
-
-## Environment Variables
-
-Configure via `.env` (see `compose.env.example`):
-
-| Variable | Purpose |
-|---|---|
-| `DASHBOARD_PORT` | Nginx dashboard port (default `3000`) |
-| `API_PORT` | FastAPI backend port (default `42000`) |
-| `DATABASE_URL` | Database connection string |
-| `SECRET_KEY` | FastAPI secret |
-| `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` | TimescaleDB settings |
-
-Keep `.env` out of VCS.
-
----
-
-## Service Management
-
-```bash
-# Start
-docker compose up -d
-
-# View logs
-docker compose logs -f msp-api
-
-# Stop
-docker compose down
-```
-
----
-
-## Project Structure
+- Deploy the full stack with `make deploy` or `docker compose up -d`.
+- Track auth events, MFA status, and service access logs in TimescaleDB.
+- Inspect staff and service inventory from the admin UI.
+- Extend behavior through adapters for email, osTicket, and password reset.
+- Persist metrics, events, and staff records in TimescaleDB for retention and query.
 
 ```
-msp-dashboard/
-├── admin/
-│   └── index.html               # Local admin UI
-├── api/
-│   ├── app.py                   # FastAPI backend
-│   ├── Dockerfile
-│   └── requirements.txt
-├── adapters/
-│   ├── email/adapter.py
-│   ├── osticket/adapter.py
-│   └── password-reset/adapter.py
-├── docker-compose.yml
-├── compose.env.example
-├── Makefile
-└── README.md
+Client browser → Nginx (3000) → FastAPI (42000) → TimescaleDB (5433)
+                                            ├── Email adapter
+                                            ├── osTicket adapter
+                                            └── Password reset adapter
 ```
 
+### Technology Stack
+
+- **Runtime**: Docker Compose
+- **Frontend**: HTML5 / Nginx (hello image + custom admin UI)
+- **Backend**: Python / FastAPI / Uvicorn
+- **Database**: TimescaleDB / PostgreSQL 16
+- **ORM**: SQLAlchemy
+- **Adapters**: Python modules for email, osTicket, password reset
+- **VCS**: Git + GitHub
+
+### Quickstart
+
+1. Clone the repository.
+   ```bash
+   git clone https://github.com/OneByJorah/msp-dashboard.git
+   cd msp-dashboard
+   ```
+2. Copy the environment template.
+   ```bash
+   cp compose.env.example .env
+   # Edit .env with DATABASE_URL, SECRET_KEY, and database credentials.
+   ```
+3. Start the stack.
+   ```bash
+   make deploy
+   ```
+4. Verify the admin UI at `http://localhost:3000`.
+
+### Configuration
+
+All configuration lives in `.env` (never committed). See `compose.env.example` for documented placeholders.
+
+| Variable | Purpose | Default |
+|---|---|---|
+| `DASHBOARD_PORT` | Nginx dashboard port | `3000` |
+| `API_PORT` | FastAPI backend port | `42000` |
+| `DATABASE_URL` | Database connection string | *(none)* |
+| `SECRET_KEY` | FastAPI secret key | *(none)* |
+| `POSTGRES_USER` | TimescaleDB username | *(none)* |
+| `POSTGRES_PASSWORD` | TimescaleDB password | *(none)* |
+| `POSTGRES_DB` | TimescaleDB database name | *(none)* |
+
+### Roadmap
+
+- [ ] Add LDAP / AD sync adapter
+- [ ] Implement RBAC for admin UI
+- [ ] Export auth events to SIEM formats (CEF / LEEF)
+- [ ] Add automated snapshot and restore workflows
+
+### License
+
+MIT © JorahOne, LLC
+
 ---
 
-## Screenshots
-
-_(Screenshots will be added after build/run capture.)_
-
----
-
-## Contributing
-
-1. Create a feature branch off `main`.
-2. Test adapter integrations locally before submitting.
-3. Submit a PR with description and screenshots for UI changes.
-
----
-
-## License
-
-MIT
-
----
-
-## Author
-
-Built by **Jhonattan L. Jimenez**.
+*Built by [JorahOne, LLC](https://github.com/JorahOne-Services) — network security, AD/M365, and infrastructure automation for SMBs and public sector.*
