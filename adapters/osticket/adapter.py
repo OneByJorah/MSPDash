@@ -17,7 +17,8 @@ Behavior:
 - /export/export -> login event for ticket thread starter (best-effort)
 - Falls back if ticket thread is not a login.
 """
-import os, requests
+import os
+
 MSP_API=os.getenv("MSP_API","http://localhost:42000")
 MSP_INGEST=os.getenv("MSP_INGEST_PATH","/ingest/service-login")
 
