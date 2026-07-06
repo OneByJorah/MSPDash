@@ -24,20 +24,30 @@
     </tbody>
   </table>
   <script>
+    const API_URL = window.API_URL || "http://localhost:42000";
     async function load() {
-      const api = "http://localhost:42000/admin/events?limit=100";
+      const api = API_URL + "/admin/events?limit=100";
       const res = await fetch(api);
       const data = await res.json();
       const tbody = document.getElementById("rows");
       tbody.innerHTML = "";
       for (const row of data) {
         const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${row.created_at||""}</td><td>${row.staff_id||"-"}</td><td>${row.service||""}</td><td>${row.event_type||""}</td><td>${row.source_ip||"-"}</td>`;
+        const td1 = document.createElement("td"); td1.textContent = row.created_at||"";
+        const td2 = document.createElement("td"); td2.textContent = row.staff_id||"-";
+        const td3 = document.createElement("td"); td3.textContent = row.service||"";
+        const td4 = document.createElement("td"); td4.textContent = row.event_type||"";
+        const td5 = document.createElement("td"); td5.textContent = row.source_ip||"-";
+        tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3); tr.appendChild(td4); tr.appendChild(td5);
         tbody.appendChild(tr);
       }
       if (!data.length) {
         const tr = document.createElement("tr");
-        tr.innerHTML = `<td colspan="5" class="muted">No events yet</td>`;
+        const td = document.createElement("td");
+        td.colSpan = 5;
+        td.className = "muted";
+        td.textContent = "No events yet";
+        tr.appendChild(td);
         tbody.appendChild(tr);
       }
     }
