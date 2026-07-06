@@ -1,103 +1,71 @@
+<!-- j1-brand:v2 -->
 <div align="center">
-  <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white">
-  <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white">
-  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white">
-  <img src="https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white">
-  <img src="https://img.shields.io/badge/license-MIT-blue?style=for-the-badge">
-</div>
 
-<br>
+# MSP Dashboard
 
-<div align="center">
-  <h1>📊 MSP Admin Dashboard</h1>
-  <p><strong>Self-Hosted IT Operations Control Plane</strong></p>
-  <p>Aggregate auth events, service health, staff records, and adapter integrations — all self-hosted</p>
-  <p>
-    <a href="#-features">Features</a> •
-    <a href="#-quick-start">Quick Start</a> •
-    <a href="#-architecture">Architecture</a> •
-    <a href="#-adapters">Adapters</a>
-  </p>
+A self-hosted IT operations control plane — authentication event tracking, service health monitoring, staff records, and adapter-based integrations.
+
+[![GitHub](https://img.shields.io/badge/github-OneByJorah%2Fmsp--dashboard-FFB300?style=for-the-badge&labelColor=0d0d0c)](https://github.com/OneByJorah/msp-dashboard)
+[![License](https://img.shields.io/badge/license-MIT-FFB300?style=for-the-badge&labelColor=0d0d0c)](LICENSE)
+[![Language](https://img.shields.io/badge/Python-FFB300?style=for-the-badge&labelColor=0d0d0c)](https://python.org)
+[![Built by](https://img.shields.io/badge/built%20by-JorahOne%20LLC-FFB300?style=for-the-badge&labelColor=0d0d0c)](https://github.com/OneByJorah)
+
 </div>
 
 ---
 
-## ✨ Features
+## Why This Exists
 
-- **Auth Event Tracking** — Monitor authentication events across systems
-- **Service Health** — Real-time service status monitoring
-- **Staff Records** — Technician and staff management
-- **Adapter Integrations** — Email, osTicket, password reset adapters
-- **Self-Hosted** — No SaaS dependencies, full data control
-- **TimescaleDB** — Time-series optimized PostgreSQL
-- **FastAPI Backend** — Modern async Python backend
-- **Nginx Reverse Proxy** — Production-grade serving
+MSPs juggle multiple clients, each with their own authentication events, service health, and staff access. The MSP Dashboard pulls it all into one place — real-time service monitoring, Auth event feeds, ticketing adapters, and self-service password resets — on a FastAPI + TimescaleDB stack deployed with Docker Compose.
 
-## 🚀 Quick Start
+## Key Features
+
+| Feature | Why It Matters |
+|---|---|
+| Real-time service monitoring | See client service health at a glance |
+| Auth event tracking | Monitor login attempts, failures, and suspicious patterns |
+| Adapter-based integrations | Email, osTicket, self-service password resets — plug in what you need |
+| PostgreSQL + TimescaleDB | Time-series optimized for event data at scale |
+| Nginx reverse proxy | Production-ready TLS termination out of the box |
+
+## Quick Start
 
 ```bash
 git clone https://github.com/OneByJorah/msp-dashboard.git
 cd msp-dashboard
-cp compose.env.example .env
-# Edit .env with your configuration
+cp compose.env.example .env   # configure database, integrations, etc.
 docker compose up -d
 ```
 
-Open **http://localhost:8080** in your browser.
-
-## 🏗️ Architecture
+## Architecture
 
 ```
-Browser → Nginx → FastAPI Backend → TimescaleDB
-                ↓
-         Adapter Layer
-         ├── Email (notifications)
-         ├── osTicket (ticketing)
-         └── Password Reset
+┌──────────┐     ┌──────────┐     ┌──────────────┐
+│  Browser  │────▶│  Nginx   │────▶│  FastAPI      │
+│  (HTTPS)  │     │  Proxy   │     │  Backend      │
+└──────────┘     └──────────┘     └──────┬───────┘
+                                          │
+                              ┌───────────┼───────────┐
+                              ▼           ▼           ▼
+                       ┌──────────┐ ┌──────────┐ ┌──────────┐
+                       │TimescaleDB│ │ Adapters │ │  Admin   │
+                       │(Postgres) │ │ Email    │ │  Panel   │
+                       └──────────┘ │ osTicket │ └──────────┘
+                                    │ SSPR     │
+                                    └──────────┘
 ```
 
-## 🔌 Adapters
+## Documentation
 
-| Adapter | Description |
-|---------|-------------|
-| **Email** | Email integration for notifications and alerts |
-| **osTicket** | Ticket system integration for incident management |
-| **Password Reset** | Self-service password reset workflow |
-
-## 📁 Project Structure
-
-```
-msp-dashboard/
-├── adapters/              # Integration adapters
-│   ├── email/             # Email integration
-│   ├── osticket/          # osTicket integration
-│   └── password-reset/    # Password reset service
-├── admin/                 # Admin UI
-├── api/                   # FastAPI backend
-├── docker-compose.yml     # Docker deployment
-└── README.md
-```
-
-## 🐳 Docker
-
-```bash
-# Start service
-docker compose up -d
-
-# View logs
-docker compose logs -f
-
-# Stop service
-docker compose down
-```
-
-## 📄 License
-
-MIT © Jhonattan L. Jimenez
+| Doc | Description |
+|---|---|
+| [Setup Guide](docs/setup.md) | Configuration and deployment walkthrough |
+| [Adapter Configuration](docs/adapters.md) | Connecting email, osTicket, and SSPR |
 
 ---
 
-<div align="center">
-  <p>🖥️ Your MSP operations, self-hosted</p>
-  <p><a href="https://github.com/OneByJorah">@OneByJorah</a></p>
-</div>
+## License
+
+MIT © JorahOne, LLC — see [LICENSE](LICENSE)
+
+<sub>Part of the JorahOne infrastructure ecosystem.</sub>
