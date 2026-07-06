@@ -31,7 +31,6 @@
 - **Self-Hosted** — No SaaS dependencies, full data control
 - **TimescaleDB** — Time-series optimized PostgreSQL
 - **FastAPI Backend** — Modern async Python backend
-- **Nginx Reverse Proxy** — Production-grade serving
 
 ## 🚀 Quick Start
 
@@ -43,12 +42,12 @@ cp compose.env.example .env
 docker compose up -d
 ```
 
-Open **http://localhost:8080** in your browser.
+Open **http://localhost:3000** in your browser (or the port configured via `DASHBOARD_PORT` in `.env`).
 
 ## 🏗️ Architecture
 
 ```
-Browser → Nginx → FastAPI Backend → TimescaleDB
+Browser → FastAPI Backend → TimescaleDB
                 ↓
          Adapter Layer
          ├── Email (notifications)
