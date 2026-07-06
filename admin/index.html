@@ -34,7 +34,7 @@
       for (const row of data) {
         const tr = document.createElement("tr");
         const td1 = document.createElement("td"); td1.textContent = row.created_at||"";
-        const td2 = document.createElement("td"); td2.textContent = row.staff_id||"-";
+        const td2 = document.createElement("td"); td2.textContent = row.staff_name||row.staff_id||"-";
         const td3 = document.createElement("td"); td3.textContent = row.service||"";
         const td4 = document.createElement("td"); td4.textContent = row.event_type||"";
         const td5 = document.createElement("td"); td5.textContent = row.source_ip||"-";

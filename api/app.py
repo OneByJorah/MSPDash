@@ -12,7 +12,7 @@ from sqlalchemy import (
     create_engine,
 )
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.orm import Session, sessionmaker, joinedload, relationship
 
 DATABASE_URL=os.getenv("DATABASE_URL", "sqlite:///./local.db")
 connect_args={"check_same_thread": False} if str(DATABASE_URL).startswith("sqlite") else {}
@@ -49,6 +49,8 @@ class AuthEvent(Base):
     user_agent=Column(Text)
     metadata_json=Column(Text)
     created_at=Column(DateTime, default=datetime.utcnow)
+    staff_rel=relationship("Staff", backref="events")
+    service_rel=relationship("Service", backref="events")
 
 Base.metadata.create_all(bind=engine)
 
@@ -81,7 +83,7 @@ def ingest_service_login(staff_email: str, service_name: str, source_ip: str | N
 
 @app.get("/admin/events")
 def list_events(service: str | None=None, limit: int=50, db: Session=Depends(get_db)):
-    q=db.query(AuthEvent)
+    q=db.query(AuthEvent).options(joinedload(AuthEvent.service_rel), joinedload(AuthEvent.staff_rel))
     if service:
         q=q.join(Service).filter(Service.name==service)
     rows=q.order_by(AuthEvent.created_at.desc()).limit(limit).all()
@@ -90,7 +92,9 @@ def list_events(service: str | None=None, limit: int=50, db: Session=Depends(get
         out.append({
           "id":r.id,
           "staff_id":r.staff_id,
-          "service":r.service_id,
+          "staff_name":r.staff_rel.name if r.staff_rel else None,
+          "service":r.service_rel.name if r.service_rel else None,
+          "service_id":r.service_id,
           "event_type":r.event_type,
           "source_ip":r.source_ip,
           "user_agent":r.user_agent,
