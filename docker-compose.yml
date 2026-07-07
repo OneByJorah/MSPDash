@@ -1,7 +1,7 @@
 services:
   dashboard:
     image: nginxdemos/hello:latest
-    container_name: msp-dashboard
+    container_name: MSPDash
     ports:
       - "${DASHBOARD_PORT:-3000}:80"
     restart: unless-stopped

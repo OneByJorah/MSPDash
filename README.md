@@ -35,8 +35,8 @@
 ## 🚀 Quick Start
 
 ```bash
-git clone https://github.com/OneByJorah/msp-dashboard.git
-cd msp-dashboard
+git clone https://github.com/OneByJorah/MSPDash.git
+cd MSPDash
 cp compose.env.example .env
 # Edit .env with your configuration
 docker compose up -d
@@ -66,7 +66,7 @@ Browser → FastAPI Backend → TimescaleDB
 ## 📁 Project Structure
 
 ```
-msp-dashboard/
+MSPDash/
 ├── adapters/              # Integration adapters
 │   ├── email/             # Email integration
 │   ├── osticket/          # osTicket integration
