@@ -1,10 +1,10 @@
 repo: MSPDash
-class: Dashboard
+class: Dashboard / MSP
 org: OneByJorah
 owner: Jhonattan L. Jimenez
 license: MIT
-production_score: 0
-last_audit: "2026-07-05T20:30:00Z"
+production_score: 64
+last_audit: "2026-07-05"
 last_publish: ""
 standards_version: "2.1"
 dependencies: []
