@@ -22,6 +22,10 @@
 
 ---
 
+## 📸 Screenshot
+
+This is a CLI/backend-only tool. No screenshots available.
+
 ## ✨ Features
 
 - **Auth Event Tracking** — Monitor authentication events across systems
