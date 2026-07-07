@@ -1,4 +1,4 @@
-# msp-dashboard — Fixes and Enhancements
+# MSPDash — Fixes and Enhancements
 
 ## Changes Made
 

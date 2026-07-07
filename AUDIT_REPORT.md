@@ -1,4 +1,4 @@
-# AUDIT_REPORT - msp-dashboard
+# AUDIT_REPORT - MSPDash
 **Date:** 2026-07-05
 **Score:** 64/100 - DEGRADED
 - MSP operations dashboard with adapters
