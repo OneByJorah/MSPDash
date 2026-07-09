@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r api/requirements.txt
+      - name: Check Python syntax
+        run: python -m py_compile api/app.py
+      - name: Check YAML syntax
+        run: python -m yaml docker-compose.yml
+
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: msp
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: msp_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5433:5432
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r api/requirements.txt pytest pytest-asyncio httpx
+      - name: Run tests
+        env:
+          DATABASE_URL: postgresql://msp:test@localhost:5433/msp_test
+        run: pytest tests/ -v
