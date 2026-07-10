@@ -1,0 +1,20 @@
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: msp-dashboard-api
+    ports:
+      - "5013:42000"
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@shared-timescaledb:5432/msp_dashboard
+      SECRET_KEY: msp-dashboard-secret-key
+    volumes:
+      - ./api:/app
+    restart: unless-stopped
+    networks:
+      - shared-infrastructure_default
+
+networks:
+  shared-infrastructure_default:
+    external: true
