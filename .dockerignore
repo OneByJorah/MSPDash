@@ -8,7 +8,5 @@ node_modules/
 .vscode/
 .DS_Store
 *.log
-Dockerfile
-docker-compose*
-README.md
-AUDIT_REPORT.md
+.venv/
+docs/screenshots/

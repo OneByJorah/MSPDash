@@ -1,7 +1,10 @@
 import os
-from datetime import datetime
+from datetime import datetime, timezone
+from typing import Any, Optional
 
 from fastapi import Depends, FastAPI
+from fastapi.responses import FileResponse
+from pydantic import BaseModel
 from sqlalchemy import (
     Column,
     DateTime,
@@ -48,7 +51,7 @@ class AuthEvent(Base):
     source_ip=Column(String)
     user_agent=Column(Text)
     metadata_json=Column(Text)
-    created_at=Column(DateTime, default=datetime.utcnow)
+    created_at=Column(DateTime, default=lambda: datetime.now(timezone.utc))
     staff_rel=relationship("Staff", backref="events")
     service_rel=relationship("Service", backref="events")
 
@@ -63,6 +66,13 @@ def get_db():
 
 app=FastAPI(title="MSP Dashboard API")
 
+@app.get("/")
+def index():
+    admin_html=os.path.join(os.path.dirname(__file__), "..", "admin", "index.html")
+    if os.path.exists(admin_html):
+        return FileResponse(admin_html)
+    return {"status":"ok", "message":"MSP Dashboard API. See /docs for endpoints."}
+
 @app.middleware("http")
 async def add_security_headers(request, call_next):
     response=await call_next(request)
@@ -76,8 +86,20 @@ async def add_security_headers(request, call_next):
 def health():
     return {"status":"ok"}
 
+class ServiceLogin(BaseModel):
+    staff_email: str
+    service_name: str
+    source_ip: Optional[str] = None
+    user_agent: Optional[str] = None
+    metadata: Optional[dict[str, Any]] = None
+
 @app.post("/ingest/service-login")
-def ingest_service_login(staff_email: str, service_name: str, source_ip: str | None=None, user_agent: str | None=None, metadata: dict | None=None, db: Session=Depends(get_db)):
+def ingest_service_login(payload: ServiceLogin, db: Session=Depends(get_db)):
+    staff_email=payload.staff_email
+    service_name=payload.service_name
+    source_ip=payload.source_ip
+    user_agent=payload.user_agent
+    metadata=payload.metadata
     staff=db.query(Staff).filter(Staff.email==staff_email).first()
     if not staff:
         staff=Staff(name=staff_email, email=staff_email)

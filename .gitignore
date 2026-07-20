@@ -1,6 +1,30 @@
+# Environments & secrets
 .env
-.git
-.mypy_cache
-__pycache__
+.env.*
+!.env.example
+!.env.example.*
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.mypy_cache/
+.pytest_cache/
+
+# Databases (local dev)
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs & reports
 *.log
 reports/
+
+# Build/IDE
+.git
+.idea/
+.vscode/
+.DS_Store
+node_modules/
