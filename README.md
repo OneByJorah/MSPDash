@@ -1,24 +1,22 @@
 <div align="center">
-  <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white">
-  <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white">
-  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white">
-  <img src="https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white">
-  <img src="https://img.shields.io/badge/license-MIT-blue?style=for-the-badge">
+
+![MSPDash banner](docs/assets/banner.svg)
+
+# MSPDash
+
+Self-hosted IT ops dashboard for MSPs
+
+![License](https://img.shields.io/badge/license-MIT-brightgreen)
+![Language](https://img.shields.io/badge/language-Python-blue)
 </div>
+
+---
+
+<p align="center">
+  <img src="docs/assets/screenshot.png" alt="MSPDash preview" width="90%">
+</p>
 
 <br>
-
-<div align="center">
-  <h1>📊 MSP Admin Dashboard</h1>
-  <p><strong>Self-Hosted IT Operations Control Plane</strong></p>
-  <p>Aggregate auth events, service health, staff records, and adapter integrations — all self-hosted</p>
-  <p>
-    <a href="#-features">Features</a> •
-    <a href="#-quick-start">Quick Start</a> •
-    <a href="#-architecture">Architecture</a> •
-    <a href="#-adapters">Adapters</a>
-  </p>
-</div>
 
 ---
 
@@ -42,7 +40,6 @@ This is a CLI/backend-only tool. No screenshots available.
 git clone https://github.com/OneByJorah/MSPDash.git
 cd MSPDash
 cp compose.env.example .env
-# Edit .env with your configuration
 docker compose up -d
 ```
 
@@ -100,7 +97,18 @@ MIT © Jhonattan L. Jimenez
 
 ---
 
-<div align="center">
-  <p>🖥️ Your MSP operations, self-hosted</p>
-  <p><a href="https://github.com/OneByJorah">@OneByJorah</a></p>
-</div>
+## 🤝 Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). All contributions follow the [Code of Conduct](CODE_OF_CONDUCT.md).
+
+## 🔒 Security
+
+Found a vulnerability? Please follow our [Security Policy](SECURITY.md) and report privately to `security@jorahone.com`.
+
+## 📄 License
+
+[MIT License](LICENSE) © Jhonattan L. Jimenez (OneByJorah)
+
+---
+
+<p align="center">Built with 🌴 by <a href="https://github.com/OneByJorah">OneByJorah</a> · <a href="https://jorahone.com">jorahone.com</a></p>
