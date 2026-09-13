@@ -7,7 +7,6 @@
 [![Stars](https://img.shields.io/github/stars/OneByJorah/MSPDash?style=for-the-badge&color=FFB300&labelColor=0a0a09)](https://github.com/OneByJorah/MSPDash/stargazers)
 [![Last Commit](https://img.shields.io/github/last-commit/OneByJorah/MSPDash?style=for-the-badge&color=FFB300&labelColor=0a0a09)](https://github.com/OneByJorah/MSPDash/commits)
 
-![MSPDash IT ops dashboard](.github/screenshots/main.png)
 [![CI](https://img.shields.io/github/actions/workflow/status/OneByJorah/MSPDash/ci.yml?style=for-the-badge&color=FFB300&labelColor=0a0a09&label=ci)](https://github.com/OneByJorah/MSPDash/actions/workflows/ci.yml)
 
 ![MSPDash dashboard](docs/assets/screenshot.png)
