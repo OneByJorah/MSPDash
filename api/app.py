@@ -90,8 +90,6 @@ def ingest_service_login(staff_email: str, service_name: str, source_ip: str | N
     db.add(ev); db.commit(); db.refresh(ev)
     return {"event_id": ev.id}
 
-@app.get("/admin/events")
-def list_events(service: str | None=None, limit: int=50, db: Session=Depends(get_db)):
     q=db.query(AuthEvent).options(joinedload(AuthEvent.service_rel), joinedload(AuthEvent.staff_rel))
     if service:
         q=q.join(Service).filter(Service.name==service)
