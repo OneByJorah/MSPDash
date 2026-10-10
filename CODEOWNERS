@@ -1,0 +1,25 @@
+# CODEOWNERS
+# This file specifies the owners of the repository for GitHub CODEOWNERS functionality.
+# See https://docs.github.com/en/repositories/setting-up-your-repository-to-host-files/creating-or-editing-github-codespaces-for-your-repository for more details.
+
+# The following teams or individuals will be automatically assigned as reviewers when PRs are created:
+# For API changes
+api/                    @OneByJorah/maintainers
+# For adapters
+adapters/               @OneByJorah/maintainers
+# For the dashboard service
+docs/                   @OneByJorah/maintainers
+README.md               @OneByJorah/maintainers
+
+# For maintenance and infrastructure
+Dockerfile              @OneByJorah/maintainers
+docker-compose.yml      @OneByJorah/maintainers
+.github/                 @OneByJorah/maintainers
+
+# For documentation
+*.md                    @OneByJorah/maintainers
+
+# For configuration and data
+*.env*                  @OneByJorah/maintainers
+*.yaml                 @OneByJorah/maintainers
+*.yml                   @OneByJorah/maintainers

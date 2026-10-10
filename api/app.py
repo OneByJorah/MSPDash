@@ -1,7 +1,6 @@
-import os
-from datetime import datetime
+import json
 
-from fastapi import Depends, FastAPI
+from fastapi import Body, Depends, FastAPI
 from sqlalchemy import (
     Column,
     DateTime,
@@ -15,7 +14,10 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session, sessionmaker, joinedload, relationship
 
 DATABASE_URL=os.getenv("DATABASE_URL", "sqlite:///./local.db")
-connect_args={"check_same_thread": False} if str(DATABASE_URL).startswith("sqlite") else {}
+if DATABASE_URL.startswith("sqlite"):
+    connect_args={"check_same_thread": False}
+else:
+    connect_args={}
 engine=create_engine(DATABASE_URL, connect_args=connect_args)
 SessionLocal=sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base=declarative_base()
@@ -77,7 +79,14 @@ def health():
     return {"status":"ok"}
 
 @app.post("/ingest/service-login")
-def ingest_service_login(staff_email: str, service_name: str, source_ip: str | None=None, user_agent: str | None=None, metadata: dict | None=None, db: Session=Depends(get_db)):
+def ingest_service_login(
+    staff_email: str = Body(),
+    service_name: str = Body(),
+    source_ip: str | None = Body(None),
+    user_agent: str | None = Body(None),
+    metadata: dict | None = Body(None),
+    db: Session = Depends(get_db)
+):
     staff=db.query(Staff).filter(Staff.email==staff_email).first()
     if not staff:
         staff=Staff(name=staff_email, email=staff_email)
@@ -86,10 +95,12 @@ def ingest_service_login(staff_email: str, service_name: str, source_ip: str | N
     if not service:
         service=Service(name=service_name, type="sso")
         db.add(service); db.commit(); db.refresh(service)
-    ev=AuthEvent(staff_id=staff.id, service_id=service.id, event_type="login", source_ip=source_ip, user_agent=user_agent, metadata_json=str(metadata or {}))
+    ev=AuthEvent(staff_id=staff.id, service_id=service.id, event_type="login", source_ip=source_ip, user_agent=user_agent, metadata_json=json.dumps(metadata or {}))
     db.add(ev); db.commit(); db.refresh(ev)
     return {"event_id": ev.id}
 
+@app.get("/admin/events")
+def list_events(service: str | None=None, limit: int=50, db: Session=Depends(get_db)):
     q=db.query(AuthEvent).options(joinedload(AuthEvent.service_rel), joinedload(AuthEvent.staff_rel))
     if service:
         q=q.join(Service).filter(Service.name==service)
